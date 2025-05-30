@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Initiative Bridging Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+        
+        .section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        input[type="text"], input[type="number"], textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+        
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .templates {
+            margin-top: 30px;
+        }
+        
+        .template-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .template-output h4 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .template-textarea {
+            width: 100%;
+            min-height: 120px;
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+        
+        .generate-btn {
+            background: #27ae60;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .generate-btn:hover {
+            background: #219a52;
+        }
+        
+        .reset-btn {
+            background: #95a5a6;
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .reset-btn:hover {
+            background: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Initiative Bridging Communication Tool</h1>
+            <p>Systematic approach to handling unplanned security requests</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <h3>Step 1: Alignment Check</h3>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="hasAlignment" onchange="toggleAlignmentSection()">
+                    <label for="hasAlignment">Does this request align with any planned initiative?</label>
+                </div>
+                <p style="font-size: 14px; color: #666; margin-top: 10px;">
+                    Check YES only if: (1) there's clearly an initiative that aligns with the request AND (2) that initiative has a scope of work, milestone, or deliverable very similar to the request.
+                </p>
+            </div>
+            
+            <div id="rejectionSection" class="section">
+                <h3>Rejection Framework</h3>
+                <div class="form-group">
+                    <label>Preferred Response Type:</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="rejectionType" value="minimal" checked>
+                            Offer minimal viable response
+                        </label>
+                        <label>
+                            <input type="radio" name="rejectionType" value="prioritize">
+                            Suggest prioritizing for next quarter
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="minimalResponse">Minimal viable response (if applicable):</label>
+                    <input type="text" id="minimalResponse" placeholder="e.g., quick security checklist, basic documentation review">
+                </div>
+                <div class="form-group">
+                    <label for="minimalTimeframe">Timeframe for minimal response:</label>
+                    <select id="minimalTimeframe">
+                        <option value="1-2 days">1-2 days</option>
+                        <option value="1 week">1 week</option>
+                        <option value="2-3 weeks">2-3 weeks</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="bridgeSection" class="section hidden">
+                <h3>Bridge Work Details</h3>
+                
+                <div class="form-group">
+                    <label for="initiativeName">Related Initiative Name:</label>
+                    <input type="text" id="initiativeName" placeholder="e.g., Q2 Access Control Modernization">
+                </div>
+                
+                <div class="form-group">
+                    <label for="specificComponent">Specific component this bridge addresses:</label>
+                    <input type="text" id="specificComponent" placeholder="e.g., RBAC policy review, endpoint hardening assessment">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bridgeTimeframe">Bridge work timeframe:</label>
+                    <select id="bridgeTimeframe">
+                        <option value="1-2 days">1-2 days</option>
+                        <option value="1 week">1 week</option>
+                        <option value="2-3 weeks">2-3 weeks</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="immediateOutcome">Immediate outcome for requestor:</label>
+                    <input type="text" id="immediateOutcome" placeholder="e.g., risk assessment, compliance gap analysis">
+                </div>
+                
+                <div class="form-group">
+                    <label for="immediateProblem">Immediate problem this solves:</label>
+                    <input type="text" id="immediateProblem" placeholder="e.g., vulnerability exposure, compliance requirement">
+                </div>
+                
+                <div class="form-group">
+                    <label for="broaderConcerns">Broader concerns NOT addressed:</label>
+                    <input type="text" id="broaderConcerns" placeholder="e.g., full infrastructure audit, complete policy overhaul">
+                </div>
+                
+                <div class="form-group">
+                    <label for="initiativeGoal">Overall initiative goal:</label>
+                    <input type="text" id="initiativeGoal" placeholder="e.g., enterprise-wide zero-trust implementation">
+                </div>
+                
+                <div class="form-group">
+                    <label for="delayedInitiatives">Delayed initiatives (comma-separated):</label>
+                    <input type="text" id="delayedInitiatives" placeholder="e.g., Initiative A, Initiative B, Initiative C">
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <button class="generate-btn" onclick="generateTemplates()">Generate Communication Templates</button>
+                <button class="reset-btn" onclick="resetForm()">Reset Form</button>
+            </div>
+            
+            <div id="templates" class="templates hidden">
+                <div class="template-output">
+                    <h4>Generated Communication Template</h4>
+                    <textarea id="templateOutput" class="template-textarea" placeholder="Templates will appear here..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAlignmentSection() {
+            const hasAlignment = document.getElementById('hasAlignment').checked;
+            const bridgeSection = document.getElementById('bridgeSection');
+            const rejectionSection = document.getElementById('rejectionSection');
+            
+            if (hasAlignment) {
+                bridgeSection.classList.remove('hidden');
+                rejectionSection.classList.add('hidden');
+            } else {
+                bridgeSection.classList.add('hidden');
+                rejectionSection.classList.remove('hidden');
+            }
+            
+            // Hide templates when switching
+            document.getElementById('templates').classList.add('hidden');
+        }
+        
+        function generateTemplates() {
+            const hasAlignment = document.getElementById('hasAlignment').checked;
+            let templateText = '';
+            
+            if (hasAlignment) {
+                templateText = generateBridgeTemplates();
+            } else {
+                templateText = generateRejectionTemplate();
+            }
+            
+            document.getElementById('templateOutput').value = templateText;
+            document.getElementById('templates').classList.remove('hidden');
+        }
+        
+        function generateBridgeTemplates() {
+            const initiativeName = document.getElementById('initiativeName').value || '[Initiative Name]';
+            const specificComponent = document.getElementById('specificComponent').value || '[specific component]';
+            const bridgeTimeframe = document.getElementById('bridgeTimeframe').value;
+            const immediateOutcome = document.getElementById('immediateOutcome').value || '[specific outcome]';
+            const immediateProblem = document.getElementById('immediateProblem').value || '[immediate problem]';
+            const broaderConcerns = document.getElementById('broaderConcerns').value || '[broader concerns]';
+            const initiativeGoal = document.getElementById('initiativeGoal').value || '[initiative goal]';
+            const delayedInitiatives = document.getElementById('delayedInitiatives').value || '[Initiative A, B & C]';
+            
+            // Calculate delay timeframe (bridge timeframe * 1.25 for interruption cost)
+            const delayTimeframe = calculateDelayTimeframe(bridgeTimeframe);
+            
+            return `SCOPE NEGOTIATION:
+"Your request touches on ${initiativeName}. Instead of a comprehensive solution, I can deliver a bridge that addresses ${specificComponent} within ${bridgeTimeframe}. This contributes toward our broader ${initiativeName} goals while meeting your immediate need for ${immediateOutcome}."
+
+SETTING BOUNDARIES:
+"This bridge represents only partial progress towards full initiative scope. It will solve ${immediateProblem} but won't address ${broaderConcerns}. Completing this bridge moves us closer to ${initiativeGoal} but doesn't replace the need for the full initiative."
+
+TIME IMPACT COMMUNICATION:
+"Delivering this bridge will require ${bridgeTimeframe} and delay ${delayedInitiatives} by approximately ${delayTimeframe}. This trade-off is decided to be worthwhile because this work directly contributes to ${initiativeName}'s objectives."`;
+        }
+        
+        function calculateDelayTimeframe(bridgeTimeframe) {
+            // Apply 1.25x multiplier for interruption cost
+            switch(bridgeTimeframe) {
+                case '1-2 days':
+                    return '2-3 days';
+                case '1 week':
+                    return '1-2 weeks';
+                case '2-3 weeks':
+                    return '3-4 weeks';
+                default:
+                    return bridgeTimeframe;
+            }
+        }
+        
+        function generateRejectionTemplate() {
+            const rejectionType = document.querySelector('input[name="rejectionType"]:checked').value;
+            const minimalResponse = document.getElementById('minimalResponse').value || '[minimal viable response]';
+            const minimalTimeframe = document.getElementById('minimalTimeframe').value;
+            
+            let template = `REJECTION FRAMEWORK:
+"This request doesn't bridge well with our current initiatives. `;
+            
+            if (rejectionType === 'minimal') {
+                template += `I can offer ${minimalResponse} in ${minimalTimeframe}, or we should prioritize this as a separate initiative for next quarter."`;
+            } else {
+                template += `We should prioritize this as a separate initiative for next quarter, or I can offer ${minimalResponse} in ${minimalTimeframe}."`;
+            }
+            
+            return template;
+        }
+        
+        function resetForm() {
+            document.getElementById('hasAlignment').checked = false;
+            document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(input => {
+                input.value = '';
+            });
+            document.querySelectorAll('select').forEach(select => {
+                select.selectedIndex = 0;
+            });
+            document.querySelector('input[name="rejectionType"][value="minimal"]').checked = true;
+            
+            toggleAlignmentSection();
+        }
+        
+        // Initialize the form state
+        toggleAlignmentSection();
+    </script>
+</body>
+</html>
